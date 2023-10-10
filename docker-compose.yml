@@ -1,6 +1,20 @@
-  version: '3'
-  services:
-    flask-app:
-      image: "maheshmogalr/todo-app:latest"
-      ports:
-       - "8000:8000"
+version: '3'
+services:
+  flask-app:
+    image: "maheshmogalr/todo-app:latest"  # Replace with the image for your Flask app
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    depends_on:
+      - postgres-db  # Make Flask service depend on the database service
+    environment:
+      DATABASE_URL: "postgresql://user:password@postgres-db:5432/dbname"  # Replace with your database connection URL
+    command: ["python", "app.py"]  # Replace with your Flask app entry point
+
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dbname
+    ports:
+      - "5432:5432"  # Map host port 5432 to container port 5432
